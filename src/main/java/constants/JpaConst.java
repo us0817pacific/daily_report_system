@@ -58,11 +58,12 @@ public interface JpaConst {
 
     // すべての従業員の件数を取得する
     String Q_EMP_COUNT = ENTITY_EMP + ".count"; // name
-    String Q_EMP_COUNT_DEF = "SELECT COUNT(e) FROM Employees AS e";
+    String Q_EMP_COUNT_DEF = "SELECT COUNT(e) FROM Employee AS e";
 
     // 社員番号とハッシュ化済みパスワードを条件に未削除の従業員を取得する
     String Q_EMP_GET_BY_CODE_AND_PASS = ENTITY_EMP + ".getByCodeAndPass";
-    String Q_EMP_GET_BY_CODE_AND_PASS_DEF = "SELECT e FROM Employee AS e WHERE e.deleteFlag = 0 AND e.code = :" + JPQL_PARM_CODE + "AND e.passwd = :" + JPQL_PARM_PASSWORD;
+    String Q_EMP_GET_BY_CODE_AND_PASS_DEF = "SELECT e FROM Employee AS e WHERE e.deleteFlag = 0 AND e.code = :" + JPQL_PARM_CODE + " AND e.password = :" + JPQL_PARM_PASSWORD;
+    // " AND..."のANDの直前のスペースは必要。ないとEmployee.javaでエラーになる
 
     // 指定した社員番号を保持する従業員の件数を取得する
     String Q_EMP_COUNT_REGISTERED_BY_CODE = ENTITY_EMP + ".countRegisteredByCode";
