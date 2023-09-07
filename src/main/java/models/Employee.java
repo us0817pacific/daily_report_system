@@ -19,8 +19,8 @@ import lombok.Setter;
 
 /**
  * 従業員データのDTOモデル
+ *
  */
-
 @Table(name = JpaConst.TABLE_EMP)
 @NamedQueries({
     @NamedQuery(
@@ -41,9 +41,9 @@ import lombok.Setter;
 @Setter //全てのクラスフィールドについてsetterを自動生成する(Lombok)
 @NoArgsConstructor //引数なしコンストラクタを自動生成する(Lombok)
 @AllArgsConstructor //全てのクラスフィールドを引数にもつ引数ありコンストラクタを自動生成する(Lombok)
-
 @Entity
 public class Employee {
+
     /**
      * id
      */
@@ -57,7 +57,6 @@ public class Employee {
      */
     @Column(name = JpaConst.EMP_COL_CODE, nullable = false, unique = true)
     private String code;
-
 
     /**
      * 氏名
@@ -78,7 +77,7 @@ public class Employee {
     private Integer adminFlag;
 
     /**
-     * 登録日時
+     *登録日時
      */
     @Column(name = JpaConst.EMP_COL_CREATED_AT, nullable = false)
     private LocalDateTime createdAt;
@@ -94,4 +93,5 @@ public class Employee {
      */
     @Column(name = JpaConst.EMP_COL_DELETE_FLAG, nullable = false)
     private Integer deleteFlag;
+
 }

@@ -19,7 +19,6 @@ import constants.PropertyConst;
  * 各Actionクラスの親クラス。共通処理を行う。
  *
  */
-
 public abstract class ActionBase {
     protected ServletContext context;
     protected HttpServletRequest request;
@@ -36,7 +35,7 @@ public abstract class ActionBase {
             ServletContext servletContext,
             HttpServletRequest servletRequest,
             HttpServletResponse servletResponse) {
-        this.context =  servletContext;
+        this.context = servletContext;
         this.request = servletRequest;
         this.response = servletResponse;
     }
@@ -54,41 +53,45 @@ public abstract class ActionBase {
      * @throws IOException
      */
     protected void invoke()
-                throws ServletException, IOException {
+            throws ServletException, IOException {
 
         Method commandMethod;
         try {
-            // パラメータからcommandを取得
+
+            //パラメータからcommandを取得
             String command = request.getParameter(ForwardConst.CMD.getValue());
 
-            // commandに該当するメソッドを実行する
-            //（例：action=Employee command=showの場合 EmployeeActionクラスのshow()メソッドを実行する）
-            commandMethod = this.getClass().getDeclaredMethod(command,  new Class[0]);
-            commandMethod.invoke(this,  new Object[0]); // メソッドに渡す引数はなし
+            //ommandに該当するメソッドを実行する
+            //(例: action=Employee command=show の場合 EmployeeActionクラスのshow()メソッドを実行する)
+            commandMethod = this.getClass().getDeclaredMethod(command, new Class[0]);
+            commandMethod.invoke(this, new Object[0]); //メソッドに渡す引数はなし
+
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
                 | InvocationTargetException | NullPointerException e) {
 
-            // 発生した例外をコンソールに表示
+            //発生した例外をコンソールに表示
             e.printStackTrace();
-
-            // commandの値が不正で実行できない場合、エラー画面を呼び出し
+            //commandの値が不正で実行できない場合エラー画面を呼び出し
             forward(ForwardConst.FW_ERR_UNKNOWN);
         }
+
     }
 
     /**
      * 指定されたjspの呼び出しを行う
-     * @param target 遷移先jsp画面のファイル名（拡張子を含まない）
+     * @param target 遷移先jsp画面のファイル名(拡張子を含まない)
      * @throws ServletException
      * @throws IOException
      */
     protected void forward(ForwardConst target) throws ServletException, IOException {
-        // jspファイルの相対パスを作成
+
+        //jspファイルの相対パスを作成
         String forward = String.format("/WEB-INF/views/%s.jsp", target.getValue());
         RequestDispatcher dispatcher = request.getRequestDispatcher(forward);
 
-        // jspファイルの呼び出し
+        //jspファイルの呼び出し
         dispatcher.forward(request, response);
+
     }
 
     /**
@@ -99,35 +102,40 @@ public abstract class ActionBase {
      * @throws IOException
      */
     protected void redirect(ForwardConst action, ForwardConst command)
-                throws ServletException, IOException {
-        // URLを構築
+            throws ServletException, IOException {
+
+        //URLを構築
         String redirectUrl = request.getContextPath() + "/?action=" + action.getValue();
         if (command != null) {
             redirectUrl = redirectUrl + "&command=" + command.getValue();
         }
 
-        // URLへリダイレクト
+        //URLへリダイレクト
         response.sendRedirect(redirectUrl);
+
     }
 
     /**
      * CSRF対策 token不正の場合はエラー画面を表示
-     * @return true:token有効 false:token不正
+     * @return true: token有効 false: token不正
      * @throws ServletException
      * @throws IOException
      */
     protected boolean checkToken() throws ServletException, IOException {
-        // パラメータからtokenの値を取得
+
+        //パラメータからtokenの値を取得
         String _token = getRequestParam(AttributeConst.TOKEN);
 
-                if(_token == null || !(_token.equals(getTokenId()))) {
-                    // tokenの値が設定されていない、またはセッションIDと一致しない場合はエラー画面を表示
-                    forward(ForwardConst.FW_ERR_UNKNOWN);
+        if (_token == null || !(_token.equals(getTokenId()))) {
 
-                    return false;
-                } else {
-                    return true;
-                }
+            //tokenが設定されていない、またはセッションIDと一致しない場合はエラー画面を表示
+            forward(ForwardConst.FW_ERR_UNKNOWN);
+
+            return false;
+        } else {
+            return true;
+        }
+
     }
 
     /**
@@ -140,7 +148,7 @@ public abstract class ActionBase {
 
     /**
      * リクエストから表示を要求されているページ数を取得し、返却する
-     * @return 要求されているページ数（要求がない場合は1）
+     * @return 要求されているページ数(要求がない場合は1)
      */
     protected int getPage() {
         int page;
@@ -199,7 +207,7 @@ public abstract class ActionBase {
     /**
      * セッションスコープから指定されたパラメータの値を取得し、返却する
      * @param key パラメータ名
-     * @param value パラメータの値
+     * @return パラメータの値
      */
     @SuppressWarnings("unchecked")
     protected <R> R getSessionScope(AttributeConst key) {
@@ -232,4 +240,5 @@ public abstract class ActionBase {
     protected <R> R getContextScope(PropertyConst key) {
         return (R) context.getAttribute(key.getValue());
     }
+
 }
