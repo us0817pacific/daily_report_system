@@ -193,7 +193,6 @@ public class EmployeeService extends ServiceBase {
         update(savedEmp);
 
     }
-
     /**
      * 社員番号とパスワードを条件に検索し、データが取得できるかどうかで認証結果を返却する
      * @param code 社員番号
